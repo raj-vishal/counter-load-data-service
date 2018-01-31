@@ -1,4 +1,4 @@
-package org.optus.microservice.loadData.utils;
+package org.optus.microservice.loadData;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,10 +43,10 @@ public final class LoadData {
 				List<String> wordList = new ArrayList<String>(Arrays.asList(words));
 
 				for (String keyWord : wordList) {
-					if (countMap.containsKey(keyWord)) {
-						countMap.put(keyWord, countMap.get(keyWord) + 1);
+					if (countMap.containsKey(keyWord.toLowerCase())) {
+						countMap.put(keyWord.toLowerCase(), countMap.get(keyWord.toLowerCase()) + 1);
 					} else {
-						countMap.put(keyWord, 1);
+						countMap.put(keyWord.toLowerCase(), 1);
 					}
 				}
 			}
@@ -67,16 +67,13 @@ public final class LoadData {
 		
 		Map<String, Integer> allWords = readFile();
 
-		System.out.println("keyWordList => "+keyWordList.toString());
 		Map<String, Integer> countMap = new HashMap<String, Integer>();
 		for (String keyWord : keyWordList) {
-			if (allWords.containsKey(keyWord)) {
-				countMap.put(keyWord, allWords.get(keyWord));
+			if (allWords.containsKey(keyWord.toLowerCase())) {
+				countMap.put(keyWord, allWords.get(keyWord.toLowerCase()));
 			}
 		}
-		System.out.println("countMap => "+countMap.toString());
-		return countMap;
-		
+		return countMap;		
 	}
 	
 	/**
@@ -88,7 +85,7 @@ public final class LoadData {
 	@RequestMapping(value="/topWordsCounter/{count}")
 	public static Map<String, Integer> listTopFewWords (@PathVariable("count") String count){
 
-		HashMap<String, Integer> topWordMap = new HashMap<String, Integer>();
+		//HashMap<String, Integer> topWordMap = new HashMap<String, Integer>();
 		
 		Map<String, Integer> allWordsMap = readFile();
 

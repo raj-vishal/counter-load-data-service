@@ -1,4 +1,4 @@
-package org.optus.microservice.loadData.utils;
+package org.optus.microservice.loadData;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
