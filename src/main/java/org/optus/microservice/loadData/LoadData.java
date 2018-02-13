@@ -11,23 +11,37 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.optus.microservice.loadData.utility.ValueComparatorUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author vishal
+ *
+ */
 @RestController
-public final class LoadData {
+@Configuration
+@ComponentScan
+@EnableAutoConfiguration
+public class LoadData {
 
 	private static Scanner fileScanner;
 	private static String DELIMITER = "|";
 	private static String NEW_LINE = "\n";
+
+	@Autowired
+	private Environment environment;
 	
 	@RequestMapping("/loadFile")
-	public static Map<String, Integer> readFile (){
+	public Map<String, Integer> readFile (){
 
 		
-		String filePath = "src" + File.separator + "main" +	File.separator + "resources" 
-				+ File.separator + "data" + File.separator + "SamplePassage.txt";
+		String filePath = environment.getProperty("source.file");
 
 		Map<String, Integer> countMap = null;
 
@@ -63,7 +77,7 @@ public final class LoadData {
 	 * @return
 	 */
 	@RequestMapping(value="/wordCounter/{requestString}")
-	public static Map<String, Integer> selectedUserCount (@PathVariable("requestString") List<String> keyWordList){
+	public Map<String, Integer> selectedUserCount (@PathVariable("requestString") List<String> keyWordList){
 		
 		Map<String, Integer> allWords = readFile();
 
@@ -83,9 +97,7 @@ public final class LoadData {
 	 * @return
 	 */
 	@RequestMapping(value="/topWordsCounter/{count}")
-	public static Map<String, Integer> listTopFewWords (@PathVariable("count") String count){
-
-		//HashMap<String, Integer> topWordMap = new HashMap<String, Integer>();
+	public Map<String, Integer> listTopFewWords (@PathVariable("count") String count){
 		
 		Map<String, Integer> allWordsMap = readFile();
 
@@ -96,11 +108,11 @@ public final class LoadData {
 		return sortedWordsMap;
 	}
 
-	public static void writeToCsvFile (HashMap<String, Integer> sortedWordsMap){
+	private void writeToCsvFile (HashMap<String, Integer> sortedWordsMap){
 		// HashMap implements serializable, so can directly use for ObjectStream
 		
-		String filePath = "src" + File.separator + "main" +
-				File.separator + "resources" + File.separator + "data" + File.separator + "TopWordList.csv";
+		String filePath = environment.getProperty("output.file");
+
 		try{
 
 			FileWriter fileWriter = new FileWriter(filePath);
