@@ -31,8 +31,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoadData {
 
 	private static Scanner fileScanner;
-	private static String DELIMITER = "|";
-	private static String NEW_LINE = "\n";
+	private static final String DELIMITER = "|";
+	private static final String NEW_LINE = "\n";
 
 	@Autowired
 	private Environment environment;
